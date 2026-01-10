@@ -10,7 +10,7 @@ import (
 	"plugin"
 	"time"
 
-	"github.com/sphireinc/namegen/api"
+	"github.com/nsa-yoda/namegen/api"
 )
 
 const defaultPluginDir = "./plugins" // runtime plugins path

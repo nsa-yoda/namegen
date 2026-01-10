@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/sphireinc/namegen/api"
+	"github.com/nsa-yoda/namegen/api"
 )
 
 // Ensure this file builds as plugin: package main and export symbol Profile

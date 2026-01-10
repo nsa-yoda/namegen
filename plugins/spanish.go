@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/sphireinc/namegen/api"
+	"github.com/nsa-yoda/namegen/api"
 )
 
 type spanishProfile struct{}
