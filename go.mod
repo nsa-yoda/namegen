@@ -1,3 +1,3 @@
-module namegen
+module github.com/nsa-yoda/namegen
 
-go 1.22
+go 1.24
