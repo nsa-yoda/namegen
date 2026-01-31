@@ -20,7 +20,7 @@ func NewRand(cfg ProfileConfig) *rand.Rand {
 
 var (
 	profilesMu         sync.RWMutex
-	profiles           = map[string]NameProfile{}
+	profiles           = map[string]NameProfile{} // here be our profiles registry
 	ErrProfileNotFound = errors.New("profile not found")
 )
 

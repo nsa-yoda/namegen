@@ -1,74 +1,226 @@
-# Namegen
+# namegen
 
+A fast, deterministic name generator written in Go.  
 
-## Build 
+`namegen` generates realistic-looking or fictional names across many language 
+families using **compiled-in profiles** (no runtime plugins). Output can be 
+made fully reproducible via seeds, making it suitable for games, testing, 
+world-building, and data generation.
 
-Run this from project root
+---
+
+## Features
+
+- 🌍 Many language profiles (English, Japanese, Spanish, Nordic, Slavic, Tamil, Nahuatl, and more)
+- 🎲 Deterministic randomness via seed (`-s`)
+- 🎚 Realism control (`-realism 0..100`)
+- 🧑 Gender hints (`male`, `female`, `neutral`)
+- 👨‍👩‍👧 Optional surnames by default ( turn them on with `-l`)
+- 🔁 Reverse order (last name first)
+- 🔢 Batch generation (`-c`)
+- 🛠 Dev mode whih prints resolved config (`-d`)
+- 🚀 Single static binary - no CGO, no `.so` plugins
+
+---
+
+## Project layout
+
+- `cmd/namegen/` – CLI entrypoint (imports all compiled-in profiles)
+- `api/` – profile interface, deterministic RNG helpers, shared utilities
+- `plugins/<name>/` – profiles (each registers itself via `init()`)
+
+---
+
+## Build
+
+From repo root:
 
 ```bash
 make build
 ```
 
-This produces:
-•	bin/namegen (main binary)
-•	plugins/english.so, plugins/japanese.so, plugins/spanish.so
+Output:
+
+```bash
+$ ls .
+bin/namegen
+```
 
 ## Run
 
+Show help:
 ```bash
-# simple:
-./bin/namegen -mode english
-# with last name:
-./bin/namegen -mode japanese -l
-# reverse name order:
-./bin/namegen -mode spanish -l -r
-# specify plugins dir
-./bin/namegen -mode english -plugins ./plugins -l
-# deterministically:
-./bin/namegen -mode english -l -s 42 --realism 80
-# gender:
-./bin/namegen -mode english -gender male -l --realism 70
-# custom family override (surname rules in plugin may react to this):
-./bin/namegen -mode english -family nordic -l --realism 90
+$ ./bin/namegen -h
 ```
 
-## How to write your own plugin
+Examples:
 
-	•	Create a new directory plugins/<yourname>/.
-	•	package main with a file exporting var Profile <type> that satisfies api.NameProfile.
-	•	Build with:
-go build -buildmode=plugin -o ../<yourname>.so from inside the plugin dir (or use Makefile).
-•	The Profile variable must be the symbol Profile (case-sensitive).
+```bash
+# default (english):
+./bin/namegen
 
-Minimal plugin skeleton:
+# choose a profile:
+./bin/namegen -mode japanese
 
-```go
-package main
+# include last name:
+./bin/namegen -mode spanish -l
+
+# reverse (last first):
+./bin/namegen -mode spanish -l -r
+
+# generate 10 names:
+./bin/namegen -mode english -l -c 10
+
+# deterministic (repeatable):
+./bin/namegen -mode english -l -s 42 -realism 80
+
+# gender:
+./bin/namegen -mode english -gender female -l -realism 90
+
+# prints a list of all available profiles
+./bin/namegen -p 
+
+# dev mode prints the config JSON used:
+./bin/namegen -mode japanese -l -c 10 -d
+```
+
+
+## Flags
+
+| Flag                              | Meaning                                                            |
+|-----------------------------------|--------------------------------------------------------------------|
+| `-mode <name>`                    | Profile/mode name (compiled-in). Defaults to english.              |
+| `-l`                              | Include last name                                                  |
+| `-r`                              | Reverse output order (last first)                                  |
+| `-gender <male, female, neutral>` | Gender hint passed to profile                                      |
+| `-family <key>`                   | Optional “family override” (profiles may interpret it differently) |
+| `-realism 0...100`                | 0 = fictional phonotactics, 100 = curated/real-looking             |
+| `-s <seed>`                       | Seed (0 / omit = random each run)                                  |
+| `-c <count>`                      | Number of names to generate                                        |
+| `-d`                              | Dev mode: prints config JSON                                       |
+| `-p`                              | List all avilable profiles                                         | 
+
+## Available profiles
+
+These are compiled into the binary via blank imports in `cmd/namegen/main.go`
+
+- amharic
+- arabic
+- aramaic
+- baltic
+- celtic
+- chinese
+- english
+- farsi
+- filipino
+- french
+- germanic
+- greek
+- hawaiian
+- hebrew
+- hindi
+- igbo
+- indonesian
+- italian
+- japanese
+- kazakh
+- korean
+- malay
+- maori
+- nahuatl
+- nordic
+- portuguese
+- samoan
+- slavic
+- spanish
+- swahili
+- tamil
+- thai
+- turkish
+- uzbek
+- vietnamese
+- yoruba
+
+If you run a mode that doesn't exist, the CLI falls back to english.
+
+## How it works
+
+The CLI passes `api.ProfileConfig` to the selected profile.
+- Profiles call `api.NewRand(cfg)` which:
+  - returns a deterministic RNG when `cfg.Seed != 0`
+  - returns a time-seeded RNG when `cfg.Seed == 0`
+- Profiles should use `api.PickRand(slice, r)` to select items.
+
+Rule of thumb: If you want reproducibility, always pass `-s <seed>`
+
+## Writing a new profile (compiled-in)
+
+1. Create a folder:
+
+```bash
+$ mkdir -p plugins/myprofile
+```
+
+2. Add `plugins/myprofile/myprofile.go` and paste this minimal skeleton:
+
+```go 
+package myprofile
 
 import (
-	"example.com/namegen/api"
+	"github.com/nsa-yoda/namegen/api"
 )
 
 type myProfile struct{}
 
-func (m myProfile) Info() map[string]string { return map[string]string{"name":"myprofile"} }
-func (m myProfile) Generate(cfg api.ProfileConfig) (api.NameResult, error) {
-	// generate
-	return api.NameResult{First:"X", Last:"Y"}, nil
+const PROFILE = "myprofile"
+
+func init() {
+	api.RegisterProfile(PROFILE, Profile)
+}
+
+func (p myProfile) Info() map[string]string {
+	return map[string]string{
+		"name":  PROFILE,
+		"notes": "What this profile does",
+	}
+}
+
+func (p myProfile) Generate(cfg api.ProfileConfig) (api.NameResult, error) {
+	r := api.NewRand(cfg)
+
+	first := api.PickRand([]string{"Ada", "Grace", "Linus"}, r)
+	last := ""
+	if cfg.IncludeLast {
+		last = api.PickRand([]string{"Lovelace", "Hopper", "Torvalds"}, r)
+	}
+
+	return api.NameResult{First: first, Last: last}, nil
 }
 
 var Profile myProfile
 ```
 
-## Important caveats & troubleshooting
+3. Compile it into the binary by adding a blank import to `cmd/namegen/main.go`:
 
-1.	Go plugin limitations
-	•	Go plugins (plugin package) only work on systems that support dlopen for Go plugin binaries (typically Linux). Plugins built on one OS/arch generally won’t work on another.
-	•	Plugin and main binary must be built with the same Go toolchain version (e.g., both with Go 1.20). Mismatches can cause plugin.Open errors or type mismatches.
+```go 
+_ "github.com/nsa-yoda/namegen/plugins/myprofile"
+```
 
-2. Type identity
-The api package must be the same module import path and compiled version for both plugin and main. If you change module path or API types, rebuild both.
+4. Build and run:
 
-3. Permissions & Execution
-•	Ensure .so files are in the -plugins directory and readable.
-•	If a plugin fails to load, the binary falls back to builtin English generator.
+```bash
+$ make build
+$ ./bin/namegen -mode myprofile -l -s 123 -c 5
+```
+
+## Notes / gotchas
+
+- realism is profile-specific behavior. Every profile implements its own blend between curated names and procedural phonotactics.
+- ASCII output by design is the defualt. Some languages normally use diacritics or special punctuation; these profiles intentionally keep output ASCII-friendly.
+- Profile not found fallback. If -mode isn't registered, the CLI logs a warning and uses english.
+
+
+## License
+
+This project is licensed under the MIT license, see LICENSE file
+

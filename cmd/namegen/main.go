@@ -58,6 +58,7 @@ func main() {
 	realism := flag.Int("realism", 50, "Realism 0..100 (0 fictional phonotactics, 100 real-looking names)")
 	seed := flag.Int64("s", 0, "Seed (0 or omit for random)")
 	count := flag.Int("c", 1, "Number of names to generate, 1 by default or omitted")
+	listProfiles := flag.Bool("p", false, "Show available profiles")
 	devMode := flag.Bool("d", false, "Development mode")
 	flag.Parse()
 
@@ -71,6 +72,13 @@ func main() {
 		IncludeLast: *includeLast,
 		Reverse:     *reverse,
 		DevMode:     *devMode,
+	}
+
+	if *listProfiles {
+		for _, p := range api.ListProfiles() {
+			fmt.Println(p)
+		}
+		return
 	}
 
 	if *devMode {
