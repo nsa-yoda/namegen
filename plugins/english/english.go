@@ -1,18 +1,20 @@
-package main
+package english
 
 import (
 	"fmt"
-	"math/rand"
 	"strings"
-	"time"
 
 	"github.com/nsa-yoda/namegen/api"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
-
-// Ensure this file builds as plugin: package main and export symbol Profile
 
 type englishProfile struct {
 	// could hold precomputed frequency tables
+}
+
+func init() {
+	api.RegisterProfile("english", Profile)
 }
 
 func (p englishProfile) Info() map[string]string {
@@ -23,13 +25,8 @@ func (p englishProfile) Info() map[string]string {
 }
 
 func (p englishProfile) Generate(cfg api.ProfileConfig) (api.NameResult, error) {
-	// use provided seed if > 0 for deterministic behavior
-	var r *rand.Rand
-	if cfg.Seed != 0 {
-		r = rand.New(rand.NewSource(cfg.Seed + time.Now().UnixNano()))
-	} else {
-		r = rand.New(rand.NewSource(time.Now().UnixNano()))
-	}
+	// Deterministic when cfg.Seed != 0
+	r := api.NewRand(cfg)
 
 	vowels := []string{"a", "e", "i", "o", "u"}
 	consonants := []string{"b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "r", "s", "t", "v", "w", "y", "z"}
@@ -95,13 +92,14 @@ func (p englishProfile) Generate(cfg api.ProfileConfig) (api.NameResult, error) 
 	}
 
 	// capitalization
-	first = strings.Title(first)
-	last = strings.Title(last)
+	caser := cases.Title(language.English)
+	first = caser.String(first)
+	last = caser.String(last)
 
 	return api.NameResult{First: first, Last: last}, nil
 }
 
-// exported symbol
+// Profile is the core exported symbol
 var Profile englishProfile
 
 func main() {

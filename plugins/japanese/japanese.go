@@ -1,28 +1,31 @@
-package main
+package japanese
 
 import (
 	"fmt"
-	"math/rand"
 	"strings"
-	"time"
 
 	"github.com/nsa-yoda/namegen/api"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 type japaneseProfile struct{}
 
+func init() {
+	api.RegisterProfile("japanese", Profile)
+}
+
 func (p japaneseProfile) Info() map[string]string {
-	return map[string]string{"name": "japanese", "notes": "CV-heavy Japanese-like generator; includes typical suffixes"}
+	return map[string]string{
+		"name":  "japanese",
+		"notes": "CV-heavy Japanese-like generator; includes typical suffixes",
+	}
 }
 
 func (p japaneseProfile) Generate(cfg api.ProfileConfig) (api.NameResult, error) {
-	// deterministic seeding
-	var r *rand.Rand
-	if cfg.Seed != 0 {
-		r = rand.New(rand.NewSource(cfg.Seed + time.Now().UnixNano()))
-	} else {
-		r = rand.New(rand.NewSource(time.Now().UnixNano()))
-	}
+	// Deterministic when cfg.Seed != 0
+	r := api.NewRand(cfg)
+
 	vowels := []string{"a", "i", "u", "e", "o"}
 	consonants := []string{"k", "s", "t", "n", "h", "m", "y", "r", "w", "g", "z"}
 	clusters := []string{"ky", "sh", "ch", "ny", "ry"}
@@ -59,12 +62,14 @@ func (p japaneseProfile) Generate(cfg api.ProfileConfig) (api.NameResult, error)
 		}
 	}
 
-	first = strings.Title(first)
-	last = strings.Title(last)
+	caser := cases.Title(language.English)
+	first = caser(first)
+	last = caser(last)
 
 	return api.NameResult{First: first, Last: last}, nil
 }
 
+// Profile is the core exported symbol
 var Profile japaneseProfile
 
 func main() {

@@ -1,27 +1,30 @@
-package main
+package spanish
 
 import (
 	"fmt"
-	"math/rand"
 	"strings"
-	"time"
 
 	"github.com/nsa-yoda/namegen/api"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 type spanishProfile struct{}
 
+func init() {
+	api.RegisterProfile("spanish", Profile)
+}
+
 func (p spanishProfile) Info() map[string]string {
-	return map[string]string{"name": "spanish", "notes": "Spanish-like generator with -ez / -es suffixes and vowel harmony"}
+	return map[string]string{
+		"name":  "spanish",
+		"notes": "Spanish-like generator with -ez / -es suffixes and vowel harmony",
+	}
 }
 
 func (p spanishProfile) Generate(cfg api.ProfileConfig) (api.NameResult, error) {
-	var r *rand.Rand
-	if cfg.Seed != 0 {
-		r = rand.New(rand.NewSource(cfg.Seed + time.Now().UnixNano()))
-	} else {
-		r = rand.New(rand.NewSource(time.Now().UnixNano()))
-	}
+	// Deterministic when cfg.Seed != 0
+	r := api.NewRand(cfg)
 
 	vowels := []string{"a", "e", "i", "o", "u"}
 	consonants := []string{"b", "c", "d", "f", "g", "h", "j", "l", "m", "n", "p", "r", "s", "t", "v", "z"}
@@ -68,6 +71,7 @@ func (p spanishProfile) Generate(cfg api.ProfileConfig) (api.NameResult, error) 
 	return api.NameResult{First: first, Last: last}, nil
 }
 
+// Profile is the core exported symbol
 var Profile spanishProfile
 
 func main() {

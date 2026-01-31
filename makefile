@@ -1,24 +1,12 @@
-PLUGIN_DIR=plugins
 BINDIR=bin
+GO?=go
 
-.PHONY: all build main plugins clean
+.PHONY: all build clean
 
 all: build
 
-build: main plugins
-
-main:
-	cd cmd/namegen && GO111MODULE=on go build -o ../../$(BINDIR)/namegen
-
-plugins:
-	@echo "Building plugins..."
-	# English
-	cd $(PLUGIN_DIR)/english && GOOS=linux GOARCH=amd64 go build -buildmode=plugin -o ../../$(PLUGIN_DIR)/english.so
-	# Japanese
-	cd $(PLUGIN_DIR)/japanese && GOOS=linux GOARCH=amd64 go build -buildmode=plugin -o ../../$(PLUGIN_DIR)/japanese.so
-	# Spanish
-	cd $(PLUGIN_DIR)/spanish && GOOS=linux GOARCH=amd64 go build -buildmode=plugin -o ../../$(PLUGIN_DIR)/spanish.so
+build:
+	cd cmd/namegen && GO111MODULE=on $(GO) build -o ../../$(BINDIR)/namegen
 
 clean:
 	rm -rf $(BINDIR)/*
-	rm -f $(PLUGIN_DIR)/*.so
