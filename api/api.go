@@ -64,12 +64,15 @@ func ListProfiles() []string {
 
 // ProfileConfig holds runtime options the main binary passes to the plugin.
 type ProfileConfig struct {
-	Seed        int64  // 0 for random
-	Realism     int    // 0..100
-	Gender      string // "male", "female", "neutral"
-	Family      string // optional family override like "japan", "nordic", etc.
-	IncludeLast bool   // -l flag
-	Reverse     bool   // -r flag
+	Count       int    `json:"count,omitempty"`
+	Mode        string `json:"mode,omitempty"`
+	Seed        int64  `json:"seed,omitempty"`        // 0 for random
+	Realism     int    `json:"realism,omitempty"`     // 0..100
+	Gender      string `json:"gender,omitempty"`      // "male", "female", "neutral"
+	Family      string `json:"family,omitempty"`      // optional family override like "japan", "nordic", etc.
+	IncludeLast bool   `json:"includeLast,omitempty"` // -l flag
+	Reverse     bool   `json:"reverse,omitempty"`     // -r flag
+	DevMode     bool   `json:"devMode,omitempty"`
 }
 
 // NameResult is returned by plugin when asked to generate a name.

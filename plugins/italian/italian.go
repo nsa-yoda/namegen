@@ -1,4 +1,4 @@
-package slavic
+package italian
 
 import (
 	"strings"
@@ -8,67 +8,65 @@ import (
 	"golang.org/x/text/language"
 )
 
-type slavicProfile struct{}
+type italianProfile struct{}
 
-const PROFILE = "slavic"
+const PROFILE = "italian"
 
 func init() {
 	api.RegisterProfile(PROFILE, Profile)
 }
 
-func (p slavicProfile) Info() map[string]string {
+func (p italianProfile) Info() map[string]string {
 	return map[string]string{
 		"name":  PROFILE,
-		"notes": "Slavic names: realism blends curated lists (Polish/Russian/Czech/Serbian-ish) with procedural syllables; deterministic with seed",
+		"notes": "Italian names: realism blends curated lists with procedural syllables; deterministic with seed",
 	}
 }
 
-// Curated given names (ASCII only; expand anytime).
+// Curated given names.
 var firstMale = []string{
-	"Ivan", "Nikolai", "Dmitri", "Sergei", "Alexei", "Viktor", "Andrei", "Mikhail", "Pavel", "Yuri",
-	"Boris", "Oleg", "Roman", "Kirill", "Denis", "Artem", "Vadim", "Igor", "Stanislav", "Vladimir",
-	"Piotr", "Jan", "Tomasz", "Mateusz", "Kamil", "Luka", "Milan", "Dragan", "Marko", "Stefan",
+	"Marco", "Luca", "Matteo", "Giovanni", "Francesco", "Alessandro", "Andrea", "Giorgio", "Paolo", "Stefano",
+	"Roberto", "Davide", "Simone", "Federico", "Riccardo", "Antonio", "Giuseppe", "Salvatore", "Vincenzo", "Nicola",
+	"Enrico", "Fabio", "Daniele", "Massimo", "Leonardo", "Emanuele", "Pietro", "Filippo", "Michele", "Claudio",
 }
 
 var firstFemale = []string{
-	"Anna", "Olga", "Irina", "Natalia", "Svetlana", "Tatiana", "Yelena", "Nadia", "Katarina", "Marina",
-	"Anastasia", "Daria", "Vera", "Alina", "Elena", "Milena", "Ivana", "Zoya", "Marta", "Magda",
-	"Agnieszka", "Ewa", "Kinga", "Jelena", "Marija", "Teodora", "Lena", "Zuzana", "Tereza", "Petra",
+	"Giulia", "Sofia", "Martina", "Francesca", "Chiara", "Alice", "Elena", "Valentina", "Sara", "Laura",
+	"Federica", "Alessia", "Giorgia", "Silvia", "Elisa", "Paola", "Roberta", "Claudia", "Maria", "Anna",
+	"Beatrice", "Camilla", "Arianna", "Lucia", "Ilaria", "Simona", "Caterina", "Serena", "Emanuela", "Cristina",
 }
 
 var firstNeutral = []string{
-	"Sasha", "Alex", "Misha", "Nika", "Noa", "Mila", "Toni", "Dani", "Gabi", "Ren",
+	"Andrea", "Gabriele", "Alex", "Noa", "Sasha", "Giovi", "Dani", "Vale", "Nico", "Rene",
 }
 
-// Curated surnames (ASCII; mix across Slavic regions; expand anytime).
+// Curated surnames.
 var lastNames = []string{
-	"Ivanov", "Petrov", "Sokolov", "Smirnov", "Volkov", "Popov", "Kuznetsov", "Morozov", "Lebedev", "Novak",
-	"Kowalski", "Nowak", "Zielinski", "Wojcik", "Kaminski", "Lewandowski", "Kovac", "Horvat", "Jovanovic", "Petrovic",
-	"Dimitrov", "Ivanova", "Kral", "Svoboda", "Dvorak", "Hajek", "Bartos", "Stojanovic", "Nikolic", "Markovic",
+	"Rossi", "Russo", "Ferrari", "Esposito", "Bianchi", "Romano", "Colombo", "Ricci", "Marino", "Greco",
+	"Bruno", "Gallo", "Conti", "Costa", "Giordano", "Mancini", "Rizzo", "Lombardi", "Moretti", "Barbieri",
+	"Fontana", "Santoro", "Mariani", "Rinaldi", "Caruso", "Ferrara", "Gatti", "Longo", "Martinelli", "Leone",
 }
 
-// Procedural building blocks (Slavic-ish phonotactics; simple ASCII).
-var vowels = []string{"a", "e", "i", "o", "u", "y"}
-
+// Procedural building blocks (Italian-ish, vowel-forward).
+var vowels = []string{"a", "e", "i", "o", "u", "ai", "ei", "ia", "io", "ua"}
 var onsets = []string{
-	"b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "r", "s", "t", "v", "z",
-	"br", "dr", "gr", "kr", "pr", "tr", "vr", "zl", "zn",
-	"ch", "sh", "zh", "cz", "sz", "sk", "st", "sv",
+	"b", "c", "d", "f", "g", "l", "m", "n", "p", "r", "s", "t", "v", "z",
+	"br", "cr", "dr", "fr", "gr", "pr", "tr",
+	"ch", "gh", "gl", "gn", "sc", "sp", "st",
+	"", "", // allow vowel-start sometimes
 }
+var codas = []string{"", "", "", "n", "l", "r", "s", "t"}
 
-var codas = []string{"", "", "", "n", "r", "s", "t", "k", "l", "m", "v", "ch", "sh"}
+var givenEndingsMale = []string{"", "", "", "o", "i", "e", "ino", "etto", "one"}
+var givenEndingsFemale = []string{"", "", "", "a", "ia", "ina", "etta", "ella"}
+var givenEndingsNeutral = []string{"", "", "", "a", "e", "i"}
 
-var givenEndingsMale = []string{"", "", "", "ov", "ev", "in", "sky", "ski", "ik", "mir"}
-var givenEndingsFemale = []string{"", "", "", "a", "ia", "ina", "ova", "eva", "ska"}
-var givenEndingsNeutral = []string{"", "", "", "en", "in", "a"}
+var surnameEndings = []string{"", "", "", "i", "o", "a", "ini", "etti", "elli", "one", "aro"}
 
-var surnameEndings = []string{"", "", "", "ov", "ev", "in", "ski", "sky", "icz", "vic", "vich", "ova", "eva"}
-
-func (p slavicProfile) Generate(cfg api.ProfileConfig) (api.NameResult, error) {
+func (p italianProfile) Generate(cfg api.ProfileConfig) (api.NameResult, error) {
 	r := api.NewRand(cfg)
 	caser := cases.Title(language.Und)
 
-	// clamp realism
 	realism := cfg.Realism
 	if realism < 0 {
 		realism = 0
@@ -77,7 +75,6 @@ func (p slavicProfile) Generate(cfg api.ProfileConfig) (api.NameResult, error) {
 		realism = 100
 	}
 
-	// Probability to use curated lists vs procedural (same curve as other profiles)
 	useRealPct := 0
 	switch {
 	case realism >= 95:
@@ -98,7 +95,6 @@ func (p slavicProfile) Generate(cfg api.ProfileConfig) (api.NameResult, error) {
 	chooseFromReal := func() bool { return r.Intn(100) < useRealPct }
 
 	genSyl := func() string {
-		// Mostly onset+vowel(+optional coda), sometimes vowel+onset+vowel.
 		if r.Intn(100) < 75 {
 			return api.PickRand(onsets, r) + api.PickRand(vowels, r) + api.PickRand(codas, r)
 		}
@@ -115,7 +111,6 @@ func (p slavicProfile) Generate(cfg api.ProfileConfig) (api.NameResult, error) {
 			b.WriteString(genSyl())
 		}
 
-		// Ending by gender (light touch)
 		switch cfg.Gender {
 		case "male":
 			end := api.PickRand(givenEndingsMale, r)
@@ -133,7 +128,6 @@ func (p slavicProfile) Generate(cfg api.ProfileConfig) (api.NameResult, error) {
 				b.WriteString(end)
 			}
 		}
-
 		return b.String()
 	}
 
@@ -144,7 +138,6 @@ func (p slavicProfile) Generate(cfg api.ProfileConfig) (api.NameResult, error) {
 			b.WriteString(genSyl())
 		}
 
-		// Surname endings more likely at higher realism
 		thr := 20
 		if realism >= 80 {
 			thr = 45
@@ -157,11 +150,9 @@ func (p slavicProfile) Generate(cfg api.ProfileConfig) (api.NameResult, error) {
 				b.WriteString(end)
 			}
 		}
-
 		return b.String()
 	}
 
-	// ---- First name selection ----
 	first := ""
 	if chooseFromReal() {
 		switch cfg.Gender {
@@ -183,7 +174,6 @@ func (p slavicProfile) Generate(cfg api.ProfileConfig) (api.NameResult, error) {
 		first = caser.String(genGivenProcedural())
 	}
 
-	// ---- Last name selection ----
 	last := ""
 	if cfg.IncludeLast {
 		if cfg.Family == "" || strings.EqualFold(cfg.Family, PROFILE) {
@@ -193,7 +183,6 @@ func (p slavicProfile) Generate(cfg api.ProfileConfig) (api.NameResult, error) {
 				last = caser.String(genSurnameProcedural())
 			}
 		} else {
-			// If Family override is something else, still produce Slavic-ish surname for now.
 			if chooseFromReal() {
 				last = api.PickRand(lastNames, r)
 			} else {
@@ -208,4 +197,4 @@ func (p slavicProfile) Generate(cfg api.ProfileConfig) (api.NameResult, error) {
 }
 
 // Profile is the core exported symbol
-var Profile slavicProfile
+var Profile italianProfile
