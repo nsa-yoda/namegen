@@ -1,0 +1,57 @@
+/* Custom styles for the Namegen GitHub Pages site */
+
+/* Hero background: use the generated image */
+.hero-section {
+    background-image: url('header.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Dark overlay for better text contrast */
+.hero-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 0;
+}
+
+.hero-section .container {
+    position: relative;
+    z-index: 1;
+}
+
+/* Footer styling */
+.footer {
+    background-color: #f8f9fa;
+    color: #6c757d;
+}
+
+/* Code block styling */
+pre {
+    background-color: #f7f7f9;
+    padding: 1rem;
+    border-radius: 0.25rem;
+    overflow-x: auto;
+}
+
+/* Links */
+a.btn-primary {
+    background-color: #3b7ddd;
+    border-color: #3b7ddd;
+}
+a.btn-primary:hover,
+a.btn-primary:focus {
+    background-color: #2a5ca0;
+    border-color: #2a5ca0;
+}

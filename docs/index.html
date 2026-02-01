@@ -1,0 +1,225 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Namegen - Fast deterministic name generator in Go</title>
+    <!-- Use Bootstrap from a CDN for easy styling -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom styles for Namegen -->
+    <link href="./assets/style.css" rel="stylesheet">
+</head>
+<body>
+<!-- Hero section with background image -->
+<header class="hero-section text-center text-white">
+    <div class="container d-flex flex-column justify-content-center align-items-center h-100">
+        <h1 class="display-3 fw-bold mb-3">Namegen</h1>
+        <p class="lead">Fast, deterministic name generation across dozens of languages</p>
+        <a href="#getting-started" class="btn btn-lg btn-primary mt-3">Get Started</a>
+    </div>
+</header>
+
+<main class="container my-5">
+    <!-- Features section -->
+    <section id="features" class="mb-5">
+        <h2 class="mb-4 text-center">Features</h2>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">Multiple Profiles</h5>
+                        <p class="card-text">Generate realistic names in English, Japanese, Spanish, Nordic, Slavic, Tamil and many other languages.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">Deterministic Randomness</h5>
+                        <p class="card-text">Pass a seed with <code>-s</code> to produce reproducible results - perfect for games, testing and world‑building.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">Realism Control</h5>
+                        <p class="card-text">Tune the realism of generated names from 0 (fictional phonotactics) to 100 (curated and real‑looking) with <code>-realism</code>.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">Gender Hints</h5>
+                        <p class="card-text">Specify <code>male</code>, <code>female</code> or <code>neutral</code> hints for more culturally appropriate names.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">Flexible Output</h5>
+                        <p class="card-text">Toggle surnames (<code>-l</code>), reverse order (<code>-r</code>) or generate batches of names (<code>-c</code>) with ease.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">Standalone Binary</h5>
+                        <p class="card-text">No CGO or external plugins - everything is compiled into a single static binary for easy distribution.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Getting started / Usage section -->
+    <section id="getting-started" class="mb-5">
+        <h2 class="mb-4 text-center">Getting Started</h2>
+        <p>Namegen is a Go application. Build the CLI and run it with your chosen flags:</p>
+<pre><code>$ make build
+$ ./bin/namegen -mode japanese -l -realism 80 -s 42 -gender female
+</code></pre>
+        <p>The command above generates ten female Japanese names with high realism using seed 42. Namegen supports many other modes and flags - see below for a complete reference.</p>
+    </section>
+
+    <section id="flags" class="mb-5">
+        <h2 class="mb-4 text-center">CLI Flags</h2>
+        <p>When buiilt into a binary, namegen accepts flags in the command line as previously mentioned:</p>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered align-middle">
+                <thead class="table-light">
+                <tr>
+                    <th scope="col">Flag</th>
+                    <th scope="col">Meaning</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><code>-mode &lt;name&gt;</code></td>
+                    <td>Profile/mode name (compiled-in). Defaults to English.</td>
+                </tr>
+                <tr>
+                    <td><code>-l</code></td>
+                    <td>Include last name</td>
+                </tr>
+                <tr>
+                    <td><code>-r</code></td>
+                    <td>Reverse output order (last first)</td>
+                </tr>
+                <tr>
+                    <td><code>-gender &lt;male, female, neutral&gt;</code></td>
+                    <td>Gender hint passed to profile</td>
+                </tr>
+                <tr>
+                    <td><code>-family &lt;key&gt;</code></td>
+                    <td>Optional “family override” (profiles may interpret it differently)</td>
+                </tr>
+                <tr>
+                    <td><code>-realism 0...100</code></td>
+                    <td>0 = fictional phonotactics, 100 = curated / real-looking</td>
+                </tr>
+                <tr>
+                    <td><code>-s &lt;seed&gt;</code></td>
+                    <td>Seed (0 or omitted = random each run)</td>
+                </tr>
+                <tr>
+                    <td><code>-c &lt;count&gt;</code></td>
+                    <td>Number of names to generate</td>
+                </tr>
+                <tr>
+                    <td><code>-d</code></td>
+                    <td>Dev mode: prints config JSON</td>
+                </tr>
+                <tr>
+                    <td><code>-p</code></td>
+                    <td>List all available profiles</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Available profiles section -->
+    <section id="profiles" class="mb-5">
+        <h2 class="mb-4 text-center">Available Profiles</h2>
+        <p>These profiles are compiled into the binary via blank imports. If you choose a mode that doesn't exist, Namegen falls back to English.</p>
+        <div class="row">
+            <div class="col-md-3 col-6">
+                <ul class="list-unstyled">
+                    <li>Amharic</li>
+                    <li>Arabic</li>
+                    <li>Aramaic</li>
+                    <li>Baltic</li>
+                    <li>Celtic</li>
+                    <li>Chinese</li>
+                    <li>English</li>
+                    <li>Farsi</li>
+                    <li>Filipino</li>
+                </ul>
+            </div>
+            <div class="col-md-3 col-6">
+                <ul class="list-unstyled">
+                    <li>French</li>
+                    <li>Germanic</li>
+                    <li>Greek</li>
+                    <li>Hawaiian</li>
+                    <li>Hebrew</li>
+                    <li>Hindi</li>
+                    <li>Igbo</li>
+                    <li>Indonesian</li>
+                    <li>Italian</li>
+                </ul>
+            </div>
+            <div class="col-md-3 col-6">
+                <ul class="list-unstyled">
+                    <li>Japanese</li>
+                    <li>Kazakh</li>
+                    <li>Korean</li>
+                    <li>Malay</li>
+                    <li>Maori</li>
+                    <li>Nahuatl</li>
+                    <li>Nordic</li>
+                    <li>Portuguese</li>
+                    <li>Samoan</li>
+                </ul>
+            </div>
+            <div class="col-md-3 col-6">
+                <ul class="list-unstyled">
+                    <li>Slavic</li>
+                    <li>Spanish</li>
+                    <li>Swahili</li>
+                    <li>Tamil</li>
+                    <li>Thai</li>
+                    <li>Turkish</li>
+                    <li>Uzbek</li>
+                    <li>Vietnamese</li>
+                    <li>Yoruba</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- How it works -->
+    <section id="how-it-works" class="mb-5">
+        <h2 class="mb-4 text-center">How It Works</h2>
+        <p>Namegen implements each language as a "profile" that knows how to combine phonemes and syllables in a realistic way. The CLI passes an <code>api.ProfileConfig</code> to the selected profile. Profiles call <code>api.NewRand(cfg)</code> which returns a deterministic random number generator when a seed is provided and a time‑seeded RNG when it isn't. Realism is controlled by the profile itself, switching between fictional phonotactics and curated lists. For full reproducibility, always pass a non‑zero seed.</p>
+    </section>
+
+    <!-- Contribution guidelines -->
+    <section id="contributing" class="mb-5">
+        <h2 class="mb-4 text-center">Contributing</h2>
+        <p>Contributions are welcome! If you'd like to add a new profile, create a new directory under <code>plugins/</code> and register it via <code>api.RegisterProfile</code>. See the README for a minimal profile skeleton and development instructions. Please ensure that <code>make ci</code> passes before opening a pull request.</p>
+    </section>
+</main>
+
+<footer class="footer text-center py-4">
+    <div class="container">
+        <small>&copy; 2026 <a href="http://sphire.co" target="_blank">Sphire, Inc.</a> Built with Go. Licensed under the MIT License.</small>
+    </div>
+</footer>
+</body>
+</html>
