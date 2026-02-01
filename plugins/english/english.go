@@ -267,11 +267,13 @@ func (p englishProfile) Generate(cfg api.ProfileConfig) (api.NameResult, error) 
 		first = strings.ReplaceAll(first, "ii", "i")
 		first = strings.ReplaceAll(first, "oo", "o")
 		first = strings.ReplaceAll(first, "uu", "u")
+		first = mutateEnglish(r, first)
 		last = strings.ReplaceAll(last, "aa", "a")
 		last = strings.ReplaceAll(last, "ee", "e")
 		last = strings.ReplaceAll(last, "ii", "i")
 		last = strings.ReplaceAll(last, "oo", "o")
 		last = strings.ReplaceAll(last, "uu", "u")
+		last = mutateEnglish(r, last)
 	}
 
 	// Ensure proper casing if we generated procedurally

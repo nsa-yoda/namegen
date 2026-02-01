@@ -14,11 +14,20 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Install dependencies
+    - name: Build binary
       run: make build
+
+    - name: Static check
+      run: make staticcheck
+
+    - name: Vulnerability check
+      run: make vulncheck
 
     - name: Run check
       run: make check
 
     - name: Run distcheck
       run: make distcheck
+
+    - name: Cross platform ok
+      run: make cross
