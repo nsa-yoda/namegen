@@ -39,6 +39,15 @@ jobs:
             git
             grep
             coreutils
+        env:
+          MSYS2_PATH_TYPE: inherit
+
+      - name: Verify Go is visible in MSYS2 (Windows)
+        if: matrix.os == 'windows-latest'
+        shell: msys2 {0}
+        run: |
+          which go
+          go version
 
       - name: PR CI (make ci)
         if: github.event_name == 'pull_request' && matrix.os != 'windows-latest'
