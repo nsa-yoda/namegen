@@ -2,21 +2,10 @@ package api
 
 import (
 	"errors"
-	"math/rand"
 	"sort"
 	"strings"
 	"sync"
-	"time"
 )
-
-// NewRand returns a deterministic RNG when cfg.Seed != 0.
-// When cfg.Seed == 0, it returns a time-seeded RNG.
-func NewRand(cfg ProfileConfig) *rand.Rand {
-	if cfg.Seed != 0 {
-		return rand.New(rand.NewSource(cfg.Seed))
-	}
-	return rand.New(rand.NewSource(time.Now().UnixNano()))
-}
 
 var (
 	profilesMu         sync.RWMutex

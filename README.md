@@ -218,11 +218,77 @@ $ make build
 $ ./bin/namegen -mode myprofile -l -s 123 -c 5
 ```
 
+## Library usage (import in your own Go project)
+
+If you want to use NameGen as a library, you import the API package and 
+then load plugins. The easiest way is to import all built-in plugins at once:
+
+```go 
+package main
+
+import (
+	"fmt"
+
+	_ "github.com/nsa-yoda/namegen/all"
+	"github.com/nsa-yoda/namegen/api"
+)
+
+func main() {
+	// List available profiles (registered by imports)
+	fmt.Println("profiles:", api.ListProfiles())
+
+	// Grab a profile and generate a name
+	p, err := api.GetProfile("english")
+	if err != nil {
+		panic(err)
+	}
+
+	out, err := p.Generate(api.ProfileConfig{
+		Seed:        123,
+		Realism:     90,
+		Gender:      "neutral",
+		IncludeLast: true,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("%s %s\n", out.First, out.Last)
+}
+```
+
+### Loading only one plugin (smaller binaries)
+
+If you don't want every built-in profile, import only the plugin(s) you need:
+
+```go
+package main
+
+import (
+	_ "github.com/nsa-yoda/namegen/plugins/english" // registers “english” plugin/porfile
+	"github.com/nsa-yoda/namegen/api"
+)
+
+p, _ := api.GetProfile("english")
+res, _ := p.Generate(api.ProfileConfig{Seed: 123, IncludeLast: true})
+```
+
+### Notes
+
+`github.com/nsa-yoda/namegen/all` is a convenience package that blank-imports 
+every built-in plugin so their init() functions run and registers the profiles.
+
+If you care about binary size / compile time, prefer importing only 
+the specific plugin packages you need
+
 ## Notes / gotchas
 
-- realism is profile-specific behavior. Every profile implements its own blend between curated names and procedural phonotactics.
-- ASCII output by design is the defualt. Some languages normally use diacritics or special punctuation; these profiles intentionally keep output ASCII-friendly.
-- Profile not found fallback. If -mode isn't registered, the CLI logs a warning and uses english.
+- realism is profile-specific behavior. Every profile implements its own 
+  blend between curated names and procedural phonotactics.
+- ASCII output by design is the defualt. Some languages normally use
+  diacritics or special punctuation; these profiles intentionally keep output ASCII-friendly.
+- Profile not found fallback. If -mode isn't registered, the CLI logs a 
+  warning and uses english.
 
 
 ## License
