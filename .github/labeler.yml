@@ -1,0 +1,153 @@
+# .github/labeler.yml
+# Used by https://github.com/actions/labeler
+
+# --- Core code areas ---
+api:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "api/**"
+
+cli:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "cmd/**"
+          - "cmd/namegen/**"
+
+plugins:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "plugins/**"
+
+"plugins: english":
+           - changed-files:
+               - any-glob-to-any-file:
+                   - "plugins/english/**"
+
+"plugins: romance":
+           - changed-files:
+               - any-glob-to-any-file:
+                   - "plugins/spanish/**"
+                   - "plugins/french/**"
+                   - "plugins/italian/**"
+                   - "plugins/portuguese/**"
+
+"plugins: east-asian":
+           - changed-files:
+               - any-glob-to-any-file:
+                   - "plugins/japanese/**"
+                   - "plugins/korean/**"
+                   - "plugins/chinese/**"
+                   - "plugins/thai/**"
+                   - "plugins/vietnamese/**"
+
+"plugins: semitic":
+           - changed-files:
+               - any-glob-to-any-file:
+                   - "plugins/arabic/**"
+                   - "plugins/hebrew/**"
+                   - "plugins/aramaic/**"
+                   - "plugins/farsi/**"
+
+"plugins: african":
+           - changed-files:
+               - any-glob-to-any-file:
+                   - "plugins/igbo/**"
+                   - "plugins/yoruba/**"
+                   - "plugins/swahili/**"
+                   - "plugins/amharic/**"
+
+"plugins: indo-aryan":
+           - changed-files:
+               - any-glob-to-any-file:
+                   - "plugins/hindi/**"
+
+"plugins: dravidian":
+           - changed-files:
+               - any-glob-to-any-file:
+                   - "plugins/tamil/**"
+
+"plugins: slavic-nordic":
+           - changed-files:
+               - any-glob-to-any-file:
+                   - "plugins/slavic/**"
+                   - "plugins/nordic/**"
+
+"plugins: americas":
+           - changed-files:
+               - any-glob-to-any-file:
+                   - "plugins/nahuatl/**"
+
+"plugins: polynesian":
+           - changed-files:
+               - any-glob-to-any-file:
+                   - "plugins/maori/**"
+                   - "plugins/samoan/**"
+                   - "plugins/hawaiian/**"
+
+"plugins: central-asia":
+           - changed-files:
+               - any-glob-to-any-file:
+                   - "plugins/kazakh/**"
+                   - "plugins/uzbek/**"
+
+"plugins: europe":
+           - changed-files:
+               - any-glob-to-any-file:
+                   - "plugins/celtic/**"
+                   - "plugins/baltic/**"
+                   - "plugins/germanic/**"
+                   - "plugins/greek/**"
+
+# --- Docs / Meta ---
+docs:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "README.md"
+          - "README.*.md"
+          - "docs/**"
+          - "**/*.md"
+
+ci:
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/workflows/**"
+
+github:
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/**"
+
+build:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "makefile"
+          - "**/Makefile"
+          - "Dockerfile"
+          - ".dockerignore"
+
+deps:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "go.mod"
+          - "go.sum"
+
+tests:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*_test.go"
+
+security:
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/workflows/*codeql*"
+          - ".github/workflows/*dependency*"
+          - ".github/workflows/*security*"
+          - ".github/dependabot.yml"
+          - "SECURITY.md"
+
+release:
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/workflows/*release*"
+          - ".github/workflows/*tag*"
+          - ".github/workflows/*publish*"

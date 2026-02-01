@@ -29,11 +29,15 @@ jobs:
     steps:
       - name: 'Checkout repository'
         uses: actions/checkout@v4
+
       - name: 'Dependency Review'
         uses: actions/dependency-review-action@v4
         # Commonly enabled options, see https://github.com/actions/dependency-review-action#configuration-options for all available options.
         with:
-          comment-summary-in-pr: always
-        #   fail-on-severity: moderate
-        #   deny-licenses: GPL-1.0-or-later, LGPL-2.0-or-later
-        #   retry-on-snapshot-warnings: true
+          comment-summary-in-pr: on-failure
+          fail-on-severity: moderate
+          allow-licenses: MIT
+          retry-on-snapshot-warnings: true
+          fail-on-scopes: runtime, unknown
+          show-openssf-scorecard: true
+          warn-on-openssf-scorecard-level: 4

@@ -1,16 +1,46 @@
 name: Greetings
 
-on: [pull_request_target, issues]
+on:
+  issues:
+    types: [opened]
+  pull_request_target:
+    types: [opened]
+
+permissions:
+  issues: write
+  pull-requests: write
+  contents: read
 
 jobs:
   greeting:
     runs-on: ubuntu-latest
-    permissions:
-      issues: write
-      pull-requests: write
     steps:
-    - uses: actions/first-interaction@v1
-      with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        issue-message: "Message that will be displayed on users' first issue"
-        pr-message: "Message that will be displayed on users' first pull request"
+      - name: First interaction greeting
+        uses: actions/first-interaction@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          issue-message: |
+            👋 Welcome, and thanks for opening your first issue in **namegen**!
+
+            To help us move fast, please include:
+            - What you expected vs what happened
+            - The exact command you ran (flags/seed/mode/etc)
+            - Your OS + Go version
+            - Any error output or logs
+
+            If you want to take a crack at a fix, the quick local sanity run is:
+            `make ci`
+            
+            BUT you should run `make fuckmeup` for a full blown sanity check and cross platform build attempt
+
+            Thanks again - we appreciate you.
+          pr-message: |
+            🎉 Thanks for your first pull request to **namegen**!
+
+            Quick checklist before review:
+            - [ ] `make ci` passes locally
+            - [ ] If behavior changes, include an example command/output (seeded if relevant)
+            - [ ] Keep output deterministic when `-s` is provided
+            - [ ] Run `make fmt`
+
+            A maintainer will take a look soon. Thanks for contributing!
