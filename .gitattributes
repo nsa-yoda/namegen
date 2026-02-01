@@ -1,0 +1,15 @@
+# Normalize all text files to LF in the repo
+* text=auto eol=lf
+
+# Explicit common text types
+*.go  text eol=lf
+*.md  text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+Makefile text eol=lf
+makefile text eol=lf
+*.sh  text eol=lf
+
+# Windows scripts can be CRLF if you ever add them
+*.bat text eol=crlf
+*.ps1 text eol=crlf
