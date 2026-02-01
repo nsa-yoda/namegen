@@ -2,32 +2,58 @@ name: Makefile CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
+
+permissions:
+  contents: read
 
 jobs:
-  build:
+  make:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Build binary
-      run: make build
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
 
-    - name: Static check
-      run: make staticcheck
+      # Windows: use MSYS2 so make/grep/sha256sum exist
+      - name: Set up MSYS2 (Windows)
+        if: matrix.os == 'windows-latest'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: >-
+            make
+            git
+            grep
+            coreutils
 
-    - name: Vulnerability check
-      run: make vulncheck
+      - name: PR CI (make ci)
+        if: github.event_name == 'pull_request' && matrix.os != 'windows-latest'
+        run: make ci
 
-    - name: Run check
-      run: make check
+      - name: PR CI (make ci) - Windows
+        if: github.event_name == 'pull_request' && matrix.os == 'windows-latest'
+        shell: msys2 {0}
+        run: make ci
 
-    - name: Run distcheck
-      run: make distcheck
+      - name: Main full suite (make fuckmeup)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && matrix.os != 'windows-latest'
+        run: make fuckmeup
 
-    - name: Cross platform ok
-      run: make cross
+      - name: Main full suite (make fuckmeup) - Windows
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && matrix.os == 'windows-latest'
+        shell: msys2 {0}
+        run: make fuckmeup
