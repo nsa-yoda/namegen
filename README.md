@@ -1,3 +1,8 @@
+[![Test & CI](https://github.com/nsa-yoda/namegen/actions/workflows/makefile.yml/badge.svg)](https://github.com/nsa-yoda/namegen/actions/workflows/makefile.yml)
+[![Build](https://github.com/nsa-yoda/namegen/actions/workflows/go.yml/badge.svg)](https://github.com/nsa-yoda/namegen/actions/workflows/go.yml)
+[![Codacy Security](https://github.com/nsa-yoda/namegen/actions/workflows/codacy.yml/badge.svg)](https://github.com/nsa-yoda/namegen/actions/workflows/codacy.yml)
+[![CodeQL Advanced](https://github.com/nsa-yoda/namegen/actions/workflows/codeql.yml/badge.svg)](https://github.com/nsa-yoda/namegen/actions/workflows/codeql.yml)
+
 # namegen
 
 A fast, deterministic name generator written in Go.  
