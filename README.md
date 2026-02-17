@@ -16,15 +16,15 @@ world-building, and data generation.
 
 ## Features
 
-- 🌍 Many language profiles (English, Japanese, Spanish, Nordic, Slavic, Tamil, Nahuatl, and more)
-- 🎲 Deterministic randomness via seed (`-s`)
-- 🎚 Realism control (`-realism 0..100`)
-- 🧑 Gender hints (`male`, `female`, `neutral`)
-- 👨‍👩‍👧 Optional surnames by default ( turn them on with `-l`)
-- 🔁 Reverse order (last name first)
-- 🔢 Batch generation (`-c`)
-- 🛠 Dev mode whih prints resolved config (`-d`)
-- 🚀 Single static binary - no CGO, no `.so` plugins
+- Many language profiles (English, Japanese, Spanish, Nordic, Slavic, Tamil, Nahuatl, and more)
+- Deterministic randomness via seed (`-s`)
+- Realism control (`-realism 0..100`)
+- Gender hints (`male`, `female`, `neutral`)
+- Optional surnames by default ( turn them on with `-l`)
+- Reverse order (last name first)
+- Batch generation (`-c`)
+- Dev mode whih prints resolved config (`-d`)
+- Single static binary - no CGO, no `.so` plugins
 
 ---
 
